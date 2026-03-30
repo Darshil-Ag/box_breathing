@@ -294,7 +294,7 @@ function BallpitCanvas({ style, ...cfg }) {
 }
 
 // ── SVG Square with edge trace ────────────────────────────────────────────────
-function BreathingSquare({ phaseIdx, cycle, phaseProgress, size = 220 }) {
+function BreathingSquare({ phaseIdx, cycle, phaseProgress, size = 220, isMobile }) {
   const stroke = ACCENT;
   const dim = size;
   const pad = 2;
@@ -770,7 +770,7 @@ export default function BoxBreathing() {
                 border: `1px solid ${ACCENT}33`,
                 animation: "pulse-ring 3s ease-out infinite"
               }} />
-              <BreathingSquare phaseIdx={phaseIdx} cycle={cycle} phaseProgress={phaseProgress} size={220} />
+              <BreathingSquare phaseIdx={phaseIdx} cycle={cycle} phaseProgress={phaseProgress} size={220} isMobile={isMobile} />
             </div>
 
             {/* phase + countdown — below the box */}
