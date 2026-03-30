@@ -3,6 +3,7 @@ import Counter from "./Counter";
 import BlurText from "./BlurText";
 import Galaxy from "./Galaxy";
 import CircularText from "./CircularText";
+import ElectricBorder from "./ElectricBorder";
 
 // ── Inline Ballpit (Three.js) ─────────────────────────────────────────────────
 import {
@@ -779,14 +780,37 @@ export default function BoxBreathing() {
             </div>
           </div>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "center", position: "relative", zIndex: 1 }}>
-            <button className="btn-primary" style={{ width: "auto", padding: "12px 28px" }}
-              onClick={() => { setCycle(0); setPhaseIdx(0); setCountdown(4); setPhaseProgress(0); setScreen("breathing"); }}>
-              go again →
-            </button>
-            <button className="btn-ghost" style={{ width: "auto", padding: "12px 28px" }}
-              onClick={() => setScreen("intro")}>
-              restart
-            </button>
+            <a href="https://www.aimanhealth.com/appointment" target="_blank" rel="noreferrer" className="btn-primary" style={{ textDecoration: "none", width: "auto", padding: "12px 28px", display: "inline-flex", alignItems: "center" }}>
+              book appointment
+            </a>
+            <a href="https://www.aimanhealth.com/" target="_blank" rel="noreferrer" className="btn-ghost" style={{ textDecoration: "none", width: "auto", padding: "12px 28px", display: "inline-flex", alignItems: "center", border: "1px solid rgba(255,255,255,0.2)" }}>
+              visit website
+            </a>
+          </div>
+          <div style={{ display: "flex", gap: 30, justifyContent: "center", position: "relative", zIndex: 1, marginTop: 15 }}>
+            <ElectricBorder
+              color={ACCENT}
+              speed={1}
+              chaos={0.1}
+              borderRadius={12}
+            >
+              <button className="btn-ghost" style={{ width: "auto", padding: "8px 20px", fontSize: 11, opacity: 0.8, border: "none", background: "transparent" }}
+                onClick={() => { setCycle(0); setPhaseIdx(0); setCountdown(4); setPhaseProgress(0); setScreen("breathing"); }}>
+                go again
+              </button>
+            </ElectricBorder>
+
+            <ElectricBorder
+              color={ACCENT}
+              speed={1}
+              chaos={0.1}
+              borderRadius={12}
+            >
+              <button className="btn-ghost" style={{ width: "auto", padding: "8px 20px", fontSize: 11, opacity: 0.8, border: "none", background: "transparent" }}
+                onClick={() => setScreen("intro")}>
+                restart
+              </button>
+            </ElectricBorder>
           </div>
         </div>
       )}
