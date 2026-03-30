@@ -4,6 +4,7 @@ import BlurText from "./BlurText";
 import Galaxy from "./Galaxy";
 import CircularText from "./CircularText";
 import ElectricBorder from "./ElectricBorder";
+import logoImg from "./transparent_logo.png";
 
 // ── Inline Ballpit (Three.js) ─────────────────────────────────────────────────
 import {
@@ -347,16 +348,49 @@ function BreathingSquare({ phaseIdx, cycle, phaseProgress, size = 220 }) {
           <circle key={i} cx={cx} cy={cy} r="3" fill="rgba(255,255,255,0.15)" />
         ))}
       </svg>
+
+      {/* Center Logo - AIMAN HEALTH */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        pointerEvents: "none",
+        zIndex: 0
+      }}>
+        <div style={{
+          fontSize: isMobile ? "20px" : "14px",
+          fontWeight: 700,
+          color: isMobile ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.15)",
+          letterSpacing: "0.25em",
+          textTransform: "uppercase",
+          fontFamily: "'JetBrains Mono', monospace",
+          textAlign: "center",
+          lineHeight: 1.4
+        }}>
+          AIMAN<br />HEALTH
+        </div>
+      </div>
     </div>
   );
 }
 
 // ── Main App ──────────────────────────────────────────────────────────────────
 export default function BoxBreathing() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [screen, setScreen] = useState("intro"); // intro | countdown | breathing | done
   const [name, setName] = useState("");
   const [inputVal, setInputVal] = useState("");
   const [preCount, setPreCount] = useState(3);
+
+  // resize listener for mobile detection
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // breathing state
   const [cycle, setCycle] = useState(0);
@@ -433,7 +467,7 @@ export default function BoxBreathing() {
       overflow: "hidden", position: "relative"
     }}>
       {/* ── COMPANY LOGO ── */}
-      <div style={{
+      <div className="company-logo" style={{
         position: "fixed", top: 30, left: 30, zIndex: 1000,
         pointerEvents: "auto", opacity: 0.8
       }}>
@@ -441,7 +475,18 @@ export default function BoxBreathing() {
           text="AIMAN HEALTH * AIMAN HEALTH * "
           onHover="goBonkers"
           spinDuration={15}
-        />
+        >
+          <img
+            src={logoImg}
+            alt="Logo"
+            style={{
+              width: 75,
+              height: "auto",
+              filter: "brightness(0) invert(1)",
+              opacity: 0.9
+            }}
+          />
+        </CircularText>
       </div>
       {/* Google Font */}
       <style>{`
@@ -517,35 +562,65 @@ export default function BoxBreathing() {
           transition: background 0.4s, transform 0.4s;
         }
         .phase-word {
-          font-size: clamp(22px, 4vw, 32px);
-          font-weight: 500;
-          letter-spacing: 0.18em;
+          font-size: 24px;
+          font-weight: 600;
+          letter-spacing: 0.2em;
           text-transform: uppercase;
-          transition: color 0.3s;
         }
         .count-num {
-          font-size: clamp(52px, 10vw, 80px);
+          font-size: clamp(64px, 12vw, 100px);
           font-weight: 300;
           letter-spacing: -0.02em;
           line-height: 1;
           color: #fff;
         }
         .cursor { animation: blink 1s step-end infinite; }
+
+        @media (max-width: 768px) {
+          .company-logo { display: none; }
+          .box-breathing-app { padding: 0; }
+          .intro-card { 
+            padding: 28px 24px; 
+            width: min(340px, 92vw);
+          }
+          /* adjust spacing for smaller phones */
+          .breathe-ui {
+            gap: 24px !important;
+            padding: 20px !important;
+          }
+        }
       `}</style>
 
       {/* ── INTRO SCREEN ── */}
       {screen === "intro" && (
         <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          {/* Ballpit background */}
+          {/* Background */}
           <div style={{ position: "absolute", inset: 0 }}>
-            <BallpitCanvas
-              count={120}
-              gravity={0.01}
-              friction={0.9975}
-              wallBounce={0.95}
-              followCursor={true}
-              colors={BALL_COLORS}
-            />
+            {isMobile ? (
+              <Galaxy
+                mouseInteraction={false}
+                mouseRepulsion={false}
+                density={1.2}
+                glowIntensity={0.4}
+                saturation={0}
+                hueShift={140}
+                twinkleIntensity={0.5}
+                rotationSpeed={0.05}
+                autoCenterRepulsion={0}
+                starSpeed={0.3}
+                speed={1}
+                transparent={true}
+              />
+            ) : (
+              <BallpitCanvas
+                count={120}
+                gravity={0.01}
+                friction={0.9975}
+                wallBounce={0.95}
+                followCursor={true}
+                colors={BALL_COLORS}
+              />
+            )}
           </div>
 
           {/* Card */}
@@ -560,17 +635,36 @@ export default function BoxBreathing() {
             display: "flex", flexDirection: "column", gap: "20px",
             boxShadow: "0 24px 80px rgba(0,0,0,0.6)"
           }}>
-            {/* Icon */}
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            {/* Logo */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+              {isMobile && (
+                <img
+                  src={logoImg}
+                  alt="Logo"
+                  style={{
+                    width: 80,
+                    height: "auto",
+                    filter: "brightness(0) invert(1)",
+                    opacity: 0.9
+                  }}
+                />
+              )}
               <div style={{
-                width: 48, height: 48, border: `1.5px solid ${ACCENT}66`,
-                borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center"
+                border: `1.5px solid ${ACCENT}44`,
+                borderRadius: 12, padding: "6px 14px",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                background: "rgba(255,255,255,0.03)"
               }}>
-                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-                  <rect x="2" y="2" width="18" height="18" rx="3" stroke={ACCENT} strokeWidth="1.5" />
-                  <line x1="2" y1="11" x2="20" y2="11" stroke={ACCENT} strokeWidth="1" strokeOpacity="0.4" />
-                  <line x1="11" y1="2" x2="11" y2="20" stroke={ACCENT} strokeWidth="1" strokeOpacity="0.4" />
-                </svg>
+                <div style={{
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  color: ACCENT,
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                  fontFamily: "'JetBrains Mono', monospace",
+                }}>
+                  AIMAN HEALTH
+                </div>
               </div>
             </div>
 
@@ -616,7 +710,7 @@ export default function BoxBreathing() {
           alignItems: "center", justifyContent: "center",
           gap: 16, position: "relative"
         }}>
-          <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", letterSpacing: "0.18em", textTransform: "uppercase" }}>
+          <div style={{ fontSize: 18, color: "rgba(255,255,255,0.4)", letterSpacing: "0.25em", textTransform: "uppercase" }}>
             get ready
           </div>
           <Counter
@@ -683,11 +777,11 @@ export default function BoxBreathing() {
             <div style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
               <div className="phase-word" style={{ color: ACCENT }}>{currentPhase.label}</div>
               {/* phase hint — re-animates each phase via key */}
-              <div key={phaseIdx} style={{ animation: "fadeUp 0.5s ease both", display: "flex", flexDirection: "column", gap: 2 }}>
-                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.55)", letterSpacing: "0.1em" }}>
+              <div key={phaseIdx} style={{ animation: "fadeUp 0.5s ease both", display: "flex", flexDirection: "column", gap: 6, margin: "8px 0" }}>
+                <div style={{ fontSize: 18, color: "rgba(255,255,255,0.7)", letterSpacing: "0.05em" }}>
                   {HINTS[currentPhase.label]?.main}
                 </div>
-                <div style={{ fontSize: 10, color: "rgba(255,255,255,0.28)", letterSpacing: "0.08em", fontStyle: "italic" }}>
+                <div style={{ fontSize: 14, color: "rgba(255,255,255,0.35)", letterSpacing: "0.04em", fontStyle: "italic" }}>
                   {HINTS[currentPhase.label]?.sub}
                 </div>
               </div>

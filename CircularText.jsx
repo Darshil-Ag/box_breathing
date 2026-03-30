@@ -21,7 +21,7 @@ const getTransition = (duration, from) => ({
     }
 });
 
-const CircularText = ({ text, spinDuration = 20, onHover = 'speedUp', className = '' }) => {
+const CircularText = ({ text, spinDuration = 20, onHover = 'speedUp', className = '', children }) => {
     const letters = Array.from(text);
     const controls = useAnimation();
     const rotation = useMotionValue(0);
@@ -81,26 +81,31 @@ const CircularText = ({ text, spinDuration = 20, onHover = 'speedUp', className 
     };
 
     return (
-        <motion.div
-            className={`circular-text ${className}`}
-            style={{ rotate: rotation }}
-            initial={{ rotate: 0 }}
-            animate={controls}
-            onMouseEnter={handleHoverStart}
-            onMouseLeave={handleHoverEnd}
-        >
-            {letters.map((letter, i) => {
-                const rotationDeg = (360 / letters.length) * i;
-                const radius = 80; // Enlarged
-                const transform = `rotateZ(${rotationDeg}deg) translateY(-${radius}px)`;
+        <div className={`circular-text-wrapper ${className}`} style={{ position: 'relative', width: '200px', height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <motion.div
+                className="circular-text"
+                style={{ rotate: rotation }}
+                initial={{ rotate: 0 }}
+                animate={controls}
+                onMouseEnter={handleHoverStart}
+                onMouseLeave={handleHoverEnd}
+            >
+                {letters.map((letter, i) => {
+                    const rotationDeg = (360 / letters.length) * i;
+                    const radius = 80; // Enlarged
+                    const transform = `rotateZ(${rotationDeg}deg) translateY(-${radius}px)`;
 
-                return (
-                    <span key={i} style={{ transform, WebkitTransform: transform }}>
-                        {letter}
-                    </span>
-                );
-            })}
-        </motion.div>
+                    return (
+                        <span key={i} style={{ transform, WebkitTransform: transform }}>
+                            {letter}
+                        </span>
+                    );
+                })}
+            </motion.div>
+            <div className="circular-text-children" style={{ position: 'absolute', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {children}
+            </div>
+        </div>
     );
 };
 
